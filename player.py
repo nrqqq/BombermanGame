@@ -1,5 +1,5 @@
 import pygame
-import os  # Добавим импорт os
+import os
 from settings import TILE_SIZE, WIDTH, HEIGHT
 
 def load_sprites(folder, prefix, count):
@@ -72,7 +72,6 @@ class Player(pygame.sprite.Sprite):
             self.current_frame = (self.current_frame + 1) % len(self.current_sprites)
             self.image = self.current_sprites[self.current_frame]
 
-            # Отзеркаливание спрайтов при движении влево
             if self.direction == "side" and self.facing_left:
                 self.image = pygame.transform.flip(self.image, True, False)
 

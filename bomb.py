@@ -22,18 +22,15 @@ class Bomb(pygame.sprite.Sprite):
         self.exploded = True
         x, y = self.rect.topleft
         tile_x, tile_y = x // TILE_SIZE, y // TILE_SIZE
-
-        # Уничтожаем текущую клетку
         self.game_map.destroy_tile(tile_x, tile_y)
-        explosions.add(Explosion(tile_x, tile_y))  # Добавляем взрыв
+        explosions.add(Explosion(tile_x, tile_y))
 
-        # Создаём взрывы в четырёх направлениях
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dx, dy in directions:
             nx, ny = tile_x + dx, tile_y + dy
             if 0 <= nx < len(self.game_map.map_data[0]) and 0 <= ny < len(self.game_map.map_data):
-                if self.game_map.map_data[ny][nx] != '#':  # Пропускаем стены
+                if self.game_map.map_data[ny][nx] != '#':
                     self.game_map.destroy_tile(nx, ny)
                     explosions.add(Explosion(nx, ny))
 
-        self.kill()  # Удаляем бомбу после взрыва
+        self.kill()

@@ -19,7 +19,7 @@ def main():
     all_sprites.add(player)
 
     while run:
-        dt = clock.tick(FPS) / 1000  # Дельта времени в секундах
+        dt = clock.tick(FPS) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -31,10 +31,9 @@ def main():
                     bombs.add(bomb)
                     all_sprites.add(bomb)
 
-        # Обновление объектов
-        all_sprites.update(dt, game_map)  # Обновляем всех
-        bombs.update(dt, explosions)  # Передаем explosions для работы взрывов
-        explosions.update(dt)  # Обновляем взрывы
+        all_sprites.update(dt, game_map)
+        bombs.update(dt, explosions)
+        explosions.update(dt)
 
         # Отрисовка
         WIN.fill(WHITE)
