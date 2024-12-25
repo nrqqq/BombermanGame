@@ -11,7 +11,7 @@ def main_menu():
     pygame.display.set_caption("Main Menu")
     font = pygame.font.Font(None, 36)
 
-    input_box = pygame.Rect(WIDTH // 4, HEIGHT // 2, WIDTH // 2, 40)
+    input_box = pygame.Rect(WIDTH // 4, HEIGHT // 2 , WIDTH // 2, 40)
     color_inactive = pygame.Color('lightskyblue3')
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
@@ -41,7 +41,7 @@ def main_menu():
 
         WIN.fill(WHITE)
         title_text = font.render("Главное меню", True, (0, 0, 0))
-        WIN.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 4))
+        WIN.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 4 - 20))
 
         prompt_text = font.render("Введите имя и нажмите Enter", True, (0, 0, 0))
         WIN.blit(prompt_text, (WIDTH // 2 - prompt_text.get_width() // 2, HEIGHT // 2 - 60))
@@ -60,6 +60,10 @@ def main():
     player_name = main_menu()
     if not player_name:
         return
+
+    def add_score(points):
+        nonlocal score
+        score += points
 
     pygame.init()
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -99,7 +103,7 @@ def main():
 
         # Обновление объектов
         all_sprites.update(dt, game_map)
-        bombs.update(dt, explosions)
+        bombs.update(dt, explosions, add_score)
         explosions.update(dt)
 
         for explosion in explosions:
