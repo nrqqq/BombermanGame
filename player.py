@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.current_frame = 0
         self.image = self.current_sprites[self.current_frame]
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH // 2, HEIGHT // 2)
+        self.rect.center = (TILE_SIZE * 1.5, TILE_SIZE * 1.5)
         self.animation_speed = 0.2
         self.animation_counter = 0
         self.direction = "down"
@@ -63,7 +63,6 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.current_sprites = self.sprites["idle"]
 
-        # Проверка столкновений
         self.move(dx, dy, game_map)
 
         self.animation_counter += self.animation_speed

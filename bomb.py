@@ -19,18 +19,32 @@ class Bomb(pygame.sprite.Sprite):
             self.explode(explosions)
 
     def explode(self, explosions):
+        if not isinstance(explosions, pygame.sprite.Group): #кастыльный фикс, так и не понял почему explosions иногда меняет тип на gamemap
+            explosions = pygame.sprite.Group()
+            print("explosions поменял тип")
         self.exploded = True
         x, y = self.rect.topleft
         tile_x, tile_y = x // TILE_SIZE, y // TILE_SIZE
+
+        # Уничтожаем текущую клетку
         self.game_map.destroy_tile(tile_x, tile_y)
         explosions.add(Explosion(tile_x, tile_y))
 
+        # Проверяем врагов на текущей клетке
+        for enemy in pygame.sprite.spritecollide(self, explosions, False):
+            enemy.kill()
+
+        # Создаем взрывы в четырех направлениях
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dx, dy in directions:
             nx, ny = tile_x + dx, tile_y + dy
             if 0 <= nx < len(self.game_map.map_data[0]) and 0 <= ny < len(self.game_map.map_data):
-                if self.game_map.map_data[ny][nx] != '#':
+                if self.game_map.map_data[ny][nx] != '#':  # Пропускаем стены
                     self.game_map.destroy_tile(nx, ny)
                     explosions.add(Explosion(nx, ny))
 
-        self.kill()
+                    # Проверяем врагов на клетке
+                    for enemy in pygame.sprite.spritecollide(self, explosions, False):
+                        enemy.kill()
+
+        self.kill()  # Удаляем бомбу после взрыва
