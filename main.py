@@ -101,46 +101,39 @@ def main():
                     bombs.add(bomb)
                     all_sprites.add(bomb)
 
-        # Обновление объектов
         all_sprites.update(dt, game_map)
         bombs.update(dt, explosions, add_score)
         explosions.update(dt)
 
         for explosion in explosions:
-            # Уничтожение врагов
             collided_enemies = pygame.sprite.spritecollide(explosion, enemies, True)
             for enemy in collided_enemies:
                 score += 1000
 
-            # Уничтожение блоков
             tile_x = explosion.rect.centerx // TILE_SIZE
             tile_y = explosion.rect.centery // TILE_SIZE
             if 0 <= tile_x < len(game_map.map_data[0]) and 0 <= tile_y < len(game_map.map_data):
-                if game_map.map_data[tile_y][tile_x] == '*':  # Проверка разрушаемого блока
-                    game_map.destroy_tile(tile_x, tile_y)  # Удаление блока из карты
-                    score += 100  # Добавление очков
+                if game_map.map_data[tile_y][tile_x] == '*':
+                    game_map.destroy_tile(tile_x, tile_y)
+                    score += 100
 
-            # Уничтожение блоков
             tile_x = explosion.rect.centerx // TILE_SIZE
             tile_y = explosion.rect.centery // TILE_SIZE
-            if game_map.map_data[tile_y][tile_x] == '*':  # Проверка блока
+            if game_map.map_data[tile_y][tile_x] == '*':
                 game_map.destroy_tile(tile_x, tile_y)
-                score += 100  # Добавление очков
+                score += 100
 
-        # Проверка завершения игры
         if len(enemies) == 0:
             bonus = max(10000 - elapsed_time * 10, 0)
             score += bonus
             print(f"Игра завершена! Итоговый счет: {score}")
             run = False
 
-        # Отрисовка
         WIN.fill(WHITE)
         game_map.draw(WIN)
         all_sprites.draw(WIN)
         explosions.draw(WIN)
 
-        # Отображение счета и таймера
         header_y = TILE_SIZE * MAP_HEIGHT
         pygame.draw.rect(WIN, (200, 200, 200), (0, header_y, WIDTH, HEADER_HEIGHT))
         score_text = font.render(f"Счет: {score}", True, (0, 0, 0))

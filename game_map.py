@@ -1,8 +1,8 @@
 import pygame
 from settings import TILE_SIZE
-from enemy import Enemy  # Импорт класса Enemy
+from enemy import Enemy
 
-# Карта
+# карта
 MAP = [
     "#########################",
     "#..**....!.......*...***#",
@@ -48,7 +48,7 @@ class GameMap:
                 pygame.draw.rect(surface, color, (x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
     def destroy_tile(self, x, y):
-        if self.map_data[y][x] == '*':  # Если блок разрушаемый
-            self.map_data[y][x] = '.'  # Заменяем на пустую клетку
+        if self.map_data[y][x] == '*':
+            self.map_data[y][x] = '.'
             return True
         return False

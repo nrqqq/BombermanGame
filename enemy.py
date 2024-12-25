@@ -31,5 +31,4 @@ class Enemy(pygame.sprite.Sprite):
         return False
 
     def kill(self):
-        """Удаление врага."""
         super().kill()
