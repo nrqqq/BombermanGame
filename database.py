@@ -1,37 +1,41 @@
 import sqlite3
 
-def create_records_table():
-    conn = sqlite3.connect('records.db')
+def create_table():
+    conn = sqlite3.connect("scores.db")
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS records (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            score INTEGER NOT NULL
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS scores (
+            name TEXT PRIMARY KEY,
+            score INTEGER
         )
-    ''')
+    """)
     conn.commit()
     conn.close()
 
-def add_record(name, score):
-    conn = sqlite3.connect('records.db')
+def save_score(name, score):
+    conn = sqlite3.connect("scores.db")
     cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO records (name, score) VALUES (?, ?)
-    ''', (name, score))
+
+    # Проверка текущего рекорда для имени
+    cursor.execute("SELECT score FROM scores WHERE name = ?", (name,))
+    result = cursor.fetchone()
+
+    if result:
+        # Если запись существует, обновляем только если новый результат выше
+        current_score = result[0]
+        if score > current_score:
+            cursor.execute("UPDATE scores SET score = ? WHERE name = ?", (score, name))
+    else:
+        # Если записи нет, добавляем ее
+        cursor.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (name, score))
+
     conn.commit()
     conn.close()
 
-def get_records():
-    conn = sqlite3.connect('records.db')
+def get_top_scores(limit=10):
+    conn = sqlite3.connect("scores.db")
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM records ORDER BY score DESC LIMIT 10')
-    records = cursor.fetchall()
+    cursor.execute("SELECT name, score FROM scores ORDER BY score DESC LIMIT ?", (limit,))
+    top_scores = cursor.fetchall()
     conn.close()
-    return records
-
-def initialize_database():
-    create_records_table()
-
-# Инициализация базы данных
-initialize_database()
+    return top_scores

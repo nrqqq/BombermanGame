@@ -22,7 +22,7 @@ class Bomb(pygame.sprite.Sprite):
     def explode(self, explosions, score_callback):
         if not isinstance(explosions, pygame.sprite.Group):  # кастыльный фикс, так и не понял почему explosions иногда меняет тип на gamemap
             explosions = pygame.sprite.Group()
-            print("explosions поменял тип")
+            print("бомба потухла")
         # Создаем взрывы в 4 направлениях
         directions = [(0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)]
         for dx, dy in directions:
