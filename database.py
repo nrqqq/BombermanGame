@@ -16,17 +16,14 @@ def save_score(name, score):
     conn = sqlite3.connect("scores.db")
     cursor = conn.cursor()
 
-    # Проверка текущего рекорда для имени
     cursor.execute("SELECT score FROM scores WHERE name = ?", (name,))
     result = cursor.fetchone()
 
     if result:
-        # Если запись существует, обновляем только если новый результат выше
         current_score = result[0]
         if score > current_score:
             cursor.execute("UPDATE scores SET score = ? WHERE name = ?", (score, name))
     else:
-        # Если записи нет, добавляем ее
         cursor.execute("INSERT INTO scores (name, score) VALUES (?, ?)", (name, score))
 
     conn.commit()

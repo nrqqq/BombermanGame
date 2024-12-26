@@ -4,7 +4,7 @@ from settings import WIDTH, HEIGHT, WHITE, FPS, TILE_SIZE, MAP_HEIGHT, HEADER_HE
 from player import Player
 from game_map import GameMap
 from bomb import Bomb
-import database  # Импорт модуля для работы с базой данных
+import database
 
 def display_highscores():
     pygame.init()
@@ -140,19 +140,15 @@ def main():
                     bombs.add(bomb)
                     all_sprites.add(bomb)
 
-        # Обновление всех спрайтов
         all_sprites.update(dt, game_map)
         bombs.update(dt, explosions, add_score)
         explosions.update(dt)
 
-        # Проверка взаимодействия взрывов
         for explosion in explosions:
-            # Уничтожение врагов
             collided_enemies = pygame.sprite.spritecollide(explosion, enemies, True)
             for enemy in collided_enemies:
                 add_score(1000)
 
-            # Разрушение стен
             tile_x = explosion.rect.centerx // TILE_SIZE
             tile_y = explosion.rect.centery // TILE_SIZE
             if 0 <= tile_x < len(game_map.map_data[0]) and 0 <= tile_y < len(game_map.map_data):
@@ -160,7 +156,6 @@ def main():
                     game_map.destroy_tile(tile_x, tile_y)
                     add_score(100)
 
-        # Проверка взаимодействия игрока
         if pygame.sprite.spritecollideany(player, enemies):
             run = False
         if pygame.sprite.spritecollideany(player, explosions):
@@ -172,7 +167,6 @@ def main():
             print(f"Игра завершена! Итоговый счет: {score}")
             run = False
 
-        # Отрисовка игры
         WIN.fill(WHITE)
         game_map.draw(WIN)
         all_sprites.draw(WIN)
@@ -187,7 +181,6 @@ def main():
 
         pygame.display.flip()
 
-    # Сохранение результата в БД
     database.save_score(player_name, score)
 
     pygame.quit()
